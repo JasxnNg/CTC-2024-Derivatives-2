@@ -110,11 +110,11 @@ class Strategy:
         if abs(i["ask_px_00"] - i["bid_px_00"]) / max(i["ask_px_00"], i["bid_px_00"]) > 0.05: 
           if abs(i["ask_sz_00"] - i["bid_sz_00"]) / max(i["ask_sz_00"], i["bid_sz_00"]) > 0.85 and max(i["ask_sz_00"], i["bid_sz_00"]) > 3500:
             if i["ask_sz_00"] > i["bid_sz_00"]: 
-              action = "S"
-              order_size = min(i["ask_sz_00"] // 2, 400)
-            else:
               action = "B"
-              order_size = min(i["bid_sz_00"] // 2, 400)
+              order_size = min(2 * i["ask_sz_00"] , 4500)
+            else:
+              action = "S"
+              order_size = min(2 * i["bid_sz_00"], 4500)
             if order_size * i["ask_px_00"] < 50: 
               # don't add that bullshit
               continue 
