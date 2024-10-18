@@ -107,28 +107,29 @@ class Strategy:
           #     order_size = i["bid_sz_00"]
 
       if i["symbol"] not in dictionary: 
-        if abs(i["ask_px_00"] - i["bid_px_00"]) / max(i["ask_px_00"], i["bid_px_00"]) > 0.05: 
-          if abs(i["ask_sz_00"] - i["bid_sz_00"]) / max(i["ask_sz_00"], i["bid_sz_00"]) > 0.85 and max(i["ask_sz_00"], i["bid_sz_00"]) > 3500:
-            if i["ask_sz_00"] > i["bid_sz_00"]: 
-              action = "B"
-              order_size = min(2 * i["ask_sz_00"] , 4500)
-            else:
-              action = "S"
-              order_size = min(2 * i["bid_sz_00"], 4500)
-            if order_size * i["ask_px_00"] < 50: 
-              # don't add that bullshit
-              continue 
-            else: 
-              dictionary[i["symbol"]] = [action, order_size, i["ask_px_00"], i["bid_px_00"], i["day"]]
-              order = {
-                  "datetime": i["ts_recv"],
-                  "option_symbol": i["symbol"],
-                  "action": action, 
-                  "order_size":order_size
-                }
-              orders.append(order)
-    print(len(orders))
-    # print(orders)
+        if not (i["ask_sz_00"] > 0 and i["bid_sz_00"] > 0) or not (i["ask_px_00"] > 0 and i["bid_px_00"] > 0):
+          if abs(i["ask_px_00"] - i["bid_px_00"]) / max(i["ask_px_00"], i["bid_px_00"]) > 0.05: 
+            if abs(i["ask_sz_00"] - i["bid_sz_00"]) / max(i["ask_sz_00"], i["bid_sz_00"]) > 0.85 and max(i["ask_sz_00"], i["bid_sz_00"]) > 3500:
+              if i["ask_sz_00"] > i["bid_sz_00"]: 
+                action = "B"
+                order_size = min(4 * i["ask_sz_00"] , 5000)
+              else:
+                action = "S"
+                order_size = min(4 * i["bid_sz_00"], 5000)
+              if order_size * i["ask_px_00"] < 50: 
+                # don't add that bullshit
+                continue 
+              else: 
+                dictionary[i["symbol"]] = [action, order_size, i["ask_px_00"], i["bid_px_00"], i["day"]]
+                order = {
+                    "datetime": i["ts_recv"],
+                    "option_symbol": i["symbol"],
+                    "action": action, 
+                    "order_size":order_size
+                  }
+                orders.append(order)
+
+      # print(orders)
 
       # is this an iterable fuck? 
 
